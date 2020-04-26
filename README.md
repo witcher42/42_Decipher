@@ -1,5 +1,7 @@
 2020 Program42 Competition
+
 intra ID: junelee
+
 email: junelee@student.42seoul.kr
 
 # 42_Decipher
