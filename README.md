@@ -10,4 +10,6 @@ email:    junelee@student.42seoul.kr
 
 기지평문: known_plain_text
 
-암호전문: enigma
+암호전문: enigma  
+
+![title](/screen_shot.png)
