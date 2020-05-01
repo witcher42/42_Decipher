@@ -1,3 +1,5 @@
+![title](/screen_shot.png)  
+
 2020 Program42 Competition
 
 intra ID: junelee
@@ -12,4 +14,3 @@ email:    junelee@student.42seoul.kr
 
 암호전문: enigma  
 
-![title](/screen_shot.png)
