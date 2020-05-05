@@ -1,4 +1,4 @@
-![title](/screen_shot.png)  
+![title](/screen_shot.png){: width="50%" height="50%"}  
 
 2020 Program42 Competition
 
