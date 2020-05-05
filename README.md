@@ -1,5 +1,5 @@
-![title](/screen_shot.png)  
-
+![title](/screen_shot.png)
+  
 2020 Program42 Competition
 
 intra ID: junelee
