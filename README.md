@@ -1,5 +1,6 @@
-![title](/screen_shot.png){: width="100" height="100"}  
-
+![title](/screen_shot.png)
+<img src="/screen_shot.png"  width="300" height="300">
+  
 2020 Program42 Competition
 
 intra ID: junelee
