@@ -6,11 +6,11 @@
   
 2020 Program42 Competition
 
-intra ID: junelee
+team: 사이버작전사령부
 
 email:    junelee@student.42seoul.kr
 
-team: 사이버작전사령부
+intra ID: junelee
 
 project: 복호화
 
