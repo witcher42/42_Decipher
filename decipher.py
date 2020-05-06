@@ -2,7 +2,7 @@ class STREAM():
     def __init__(self, ec):
         self.ec = ec
 
-    def decryption(self, pt):	# attackers_dec(known_pt)
+    def decryption(self, known_pt):	# attackers_dec(known_pt)
 	x = 0			# original__dec(ct, private_key)
 	r = self.ec.random(x)	# random int smaller than q 
 	G = self.ec.random(x)	# start point G. order of the G is q.
@@ -12,17 +12,16 @@ class STREAM():
 	print("Is on EC : ", validation)
 	print("Is on EC : ", ec.isOn(G))
 	c1 = self.ec.smul(G,r.x)
-	c2 = self.ec.addition(pt,self.ec.smul(public__key,r.x))
+	c2 = self.ec.addition(known_pt,self.ec.smul(public__key,r.x))
 	negM = self.ec.negation(self.ec.smul(c1,private_key))
 	Pm = self.ec.addition(c2,negM)
-	lst = []
-	for i in range(0,(len(pt)+29)/30):
-		while k<len(pt[30*i:30*(i+1)]):	
+	pt = []
+	for i in range(0,(len(known_pt)+29)/30):
+		while k<len(known_pt[30*i:30*(i+1)]):	
 			rt = rt+Pm.x*(2**8)**(k-1)
 			k+=1
-			lst.append(chr(rt%(2**8)))
-	return ''.join(lst)
-	#return(pt)
+			pt.append(chr(rt%(2**8)))
+	return ''.join(pt)
 
 
 if __name__ == "__main__":
