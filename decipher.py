@@ -3,28 +3,26 @@ class STREAM():
         self.ec = ec
 
     def decryption(self, pt):	# attackers_dec(known_pt)
-        x = 0			# original__dec(ct, private_key)
-        r = self.ec.random(x)	# random int smaller than q 
-        G = self.ec.random(x)	# starting point G
-        private_key = G.x	# assume (!)
-        public__key = self.ec.smul(G,private_key)
-        validation, y = ec.findY(G.x)
-        print("Is on EC : ", validation)
-        print("Is on EC : ", ec.isOn(G))
-        c1 = self.ec.smul(G,r.x)
-        c2 = self.ec.addition(pt,self.ec.smul(public__key,r.x))
-        negM = self.ec.negation(self.ec.smul(c1,private_key))
-        pt = self.ec.addition(c2,negM)
-        return(pt)
-	#k=1
-	#m=self.ec.findY()
-	#lst=[]
-	#lst.append(chr(m%(2**8)))
-	#while k<len(ct[0:30]):	
-	#	m=m+ct[k]*(2**8)**(k-1)
-	#	k+=1
-	#	lst.append(chr(m%(2**8)))
-	#return ''.join(lst)
+	x = 0			# original__dec(ct, private_key)
+	r = self.ec.random(x)	# random int smaller than q 
+	G = self.ec.random(x)	# start point G. order of the G is q.
+	private_key = G.x	# assume (!) change G.x
+	public__key = self.ec.smul(G,private_key)
+	validation, y = ec.findY(G.x)
+	print("Is on EC : ", validation)
+	print("Is on EC : ", ec.isOn(G))
+	c1 = self.ec.smul(G,r.x)
+	c2 = self.ec.addition(pt,self.ec.smul(public__key,r.x))
+	negM = self.ec.negation(self.ec.smul(c1,private_key))
+	Pm = self.ec.addition(c2,negM)
+	lst = []
+	for i in range(0,(len(pt)+29)/30):
+		while k<len(pt[30*i:30*(i+1)]):	
+			rt = rt+Pm.x*(2**8)**(k-1)
+			k+=1
+			lst.append(chr(rt%(2**8)))
+	return ''.join(lst)
+	#return(pt)
 
 
 if __name__ == "__main__":
