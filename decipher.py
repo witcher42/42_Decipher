@@ -6,29 +6,64 @@ import random
 import math
 
 class STREAM():
-    def __init__(self, ec):
+    def __init__(self, ec, seed, P, Q):
         self.ec = ec
+        self.seed = seed 
+        self.P = P	 
+        self.Q = Q
+
+    def genStream(self): 
+        t = self.seed			
+        s = (self.ec.smul(self.P,t)).x 
+        self.seed = s			
+        r = (self.ec.smul(self.Q,s)).x 
+        return r & (2**(8 * 30) - 1) 
+
+    def encryption(self, pt):
+        loop = (len(pt)+29)/30
+        ct = bytearray('')
+        for i in range(0,loop):
+            r = self.genStream()
+            blkLen = len(pt[30*i:30*(i+1)])
+            for j in range(1,blkLen+1):
+		ct = ct + chr(((r>>((30-j)*8))&0xff)^pt[30*i+j-1])
+        return ct
 
     def decryption(self, known_pt):	# attackers_dec(known_pt)
-	x = 0			# original__dec(ct, private_key)
-	r = self.ec.random(x)	# random int smaller than q 
-	G = self.ec.random(x)	# start point G. order of the G is q.
-	private_key = G.x	# assume (!) change G.x
+	x = 0				# original__dec(ct, private_key)
+	r = self.ec.random(x)		# random int smaller than q 
+	G = self.ec.random(x)		# start point G. order of the G is q.
+	private_key = G.x		# assume (!) change G.x
 	public__key = self.ec.smul(G,private_key)
 	validation, y = ec.findY(G.x)
 	print("Is on EC : ", validation)
-	print("Is on EC : ", ec.isOn(G))
 	c1 = self.ec.smul(G,r.x)
 	c2 = self.ec.addition(known_pt,self.ec.smul(public__key,r.x))
 	negM = self.ec.negation(self.ec.smul(c1,private_key))
-	Pm = self.ec.addition(c2,negM)
-	pt = []
-	for i in range(0,(len(known_pt)+29)/30):
-		while k<len(known_pt[30*i:30*(i+1)]):	
-			rt = rt+Pm.x*(2**8)**(k-1)
-			k+=1
-			pt.append(chr(rt%(2**8)))
-	return ''.join(pt)
+	pt = self.ec.addition(c2,negM)
+	return pt	
+	#pt = []
+	#rt = []
+	#k = 0
+	#for i in range(0,(len(known_pt)+29)/30):
+	#	while k<len(known_pt[30*i:30*(i+1)]):	
+	#		rt = rt+Pm.x*(2**8)**(k-1)
+	#		k+=1
+	#		pt.append(chr(rt%(2**8)))
+	#return ''.join(pt)
+
+    def CPA(self, rt, kpt, q):
+	loop = (len(rt)+29)/30
+    	print(len(rt), "characters")
+    	print('')
+    	while (self.seed<q):
+            for i in range(0,loop):
+	    	stream = STREAM(ec,self.seed,P,Q);
+	    	pt = stream.encryption(bytearray(rt)) 
+	    	if (pt.find(kpt) != 0):
+	            return pt
+	    seed+=1
+
 
 if __name__ == "__main__":
     prime = 112817876910624391112586233842848268584935393852332056135638763933471640076719
@@ -39,8 +74,6 @@ if __name__ == "__main__":
               77619251402197618012332577948300478225863306465872072566919796455982120391100)
     Q = Point(54754931428196528902595765731417656438047316294230479980073352787194748472682,
                31061354882773147087028928252065932953521048346447896605357202055562579555845)
-    #print("Is on EC : ", ec.isOn(P))
-    #print("Is on EC : ", ec.isOn(Q))
     print("________________________________________________________")
     kpt = open('known_plain_text', 'r').read()
     print("           pt:",kpt)
@@ -73,18 +106,7 @@ if __name__ == "__main__":
     kpt = open('known_plain_text', 'r').read()
     ct = open('encrypted_text', 'r').read()
     rt = bytes(ct).encode('hex').decode('hex')
-    seed = 0xffffffffffffffff
-    loop = (len(rt)+29)/30
-    print(len(rt), "characters")
-    print('')
-    flag = 0
-    while (seed<prime and flag==0):
-        for i in range(0,loop):
-	    stream = STREAM(ec,seed,P,Q);
-	    pt = stream.encryption(bytearray(rt)) 
-	    if (pt.find(kpt) != 0):
-	        print(pt)
-		flag = 1
-	        break;
-	seed+=1
+    stream = STREAM(ec,seed,P,Q);
+    pt = stream.CPA(rt,kpt,prime)
+    print(pt)
     print("________________________________________________________")
