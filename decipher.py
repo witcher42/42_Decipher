@@ -27,13 +27,8 @@ class STREAM():
 		while k<len(known_pt[30*i:30*(i+1)]):	
 			rt = rt+Pm.x*(2**8)**(k-1)
 			k+=1
-<<<<<<< HEAD
-			lst.append(chr(rt%(2**8)))
-	return ''.join(lst)
-=======
 			pt.append(chr(rt%(2**8)))
 	return ''.join(pt)
->>>>>>> a2755ade6e469bc06a4e33523c520ed0d6d9ef8e
 
 
 if __name__ == "__main__":

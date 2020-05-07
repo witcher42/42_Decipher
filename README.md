@@ -6,9 +6,13 @@
   
 2020 Program42 Competition
 
-intra ID: junelee
+team: 사이버작전사령부
 
 email:    junelee@student.42seoul.kr
+
+intra ID: junelee
+
+project: 복호화
 
 # 42_Decipher
 동동동대문을 열어라♪ 평평평문을 열어라♬ 12시가 되면은 드듬칫드듬칫
