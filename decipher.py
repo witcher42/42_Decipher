@@ -43,25 +43,22 @@ if __name__ == "__main__":
     print("input_pt:",known_pt)
     pt = stream.decryption(known_pt)    
     print("output_pt:",pt)
+
     print("________________________________________________________")
-    pt = open('known_plain_text','r')
-    seed = 0xffffffffffffffff
-    stream = STREAM(ec,seed,P,Q); 
-    ct = stream.encryption(bytearray(pt))
+    print('Chosen Plain-text Attack Start')
+    kpt = open('known_plain_text', 'r').read()
+    ct = open('recv.txt', 'r').read()
     rt = bytes(ct).encode('hex').decode('hex')
-    print("   decoded ct:", rt)
+    seed = 0xffffffffffffffff
     loop = (len(rt)+29)/30
-    while seed<prime:
+    flag = 0
+    while (seed<prime and flag==0):
         for i in range(0,loop):
-	stream = STREAM(ec,seed,P,Q);
-	rt = stream.encryption(bytearray(rt))  
-	if (rt == kpt):
-	    print("           pt:", rt)
-	    break;
-        seed+=1
+	    stream = STREAM(ec,seed,P,Q);
+	    pt = stream.encryption(bytearray(rt)) 
+	    if (pt.find(kpt) != 0):
+	        print("           pt:", pt)
+		flag = 1
+	        break;
+	seed+=1
     print("________________________________________________________")
-
-
-    
-    
-
