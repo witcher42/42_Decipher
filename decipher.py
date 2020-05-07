@@ -1,3 +1,10 @@
+from __future__ import print_function
+from random import randint
+from sys import argv, stdout
+import collections
+import random
+import math
+
 class STREAM():
     def __init__(self, ec):
         self.ec = ec
@@ -22,7 +29,6 @@ class STREAM():
 			k+=1
 			lst.append(chr(rt%(2**8)))
 	return ''.join(lst)
-	#return(pt)
 
 
 if __name__ == "__main__":
@@ -37,7 +43,23 @@ if __name__ == "__main__":
     print("input_pt:",known_pt)
     pt = stream.decryption(known_pt)    
     print("output_pt:",pt)
-
+    print("________________________________________________________")
+    pt = open('known_plain_text','r')
+    seed = 0xffffffffffffffff
+    stream = STREAM(ec,seed,P,Q); 
+    ct = stream.encryption(bytearray(pt))
+    rt = bytes(ct).encode('hex').decode('hex')
+    print("   decoded ct:", rt)
+    loop = (len(rt)+29)/30
+    while seed<prime:
+        for i in range(0,loop):
+	stream = STREAM(ec,seed,P,Q);
+	rt = stream.encryption(bytearray(rt))  
+	if (rt == kpt):
+	    print("           pt:", rt)
+	    break;
+        seed+=1
+    print("________________________________________________________")
 
 
     
