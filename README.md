@@ -2,7 +2,7 @@
 >*복잡성이 커지면 너무 정밀해지고 패턴이 나와서 예측이 쉽다."*  
 >>20.5.6 UNIST 박종화, **2020 봄 카오스강연 '첨단기술의 과학'**  
   
-![title](/screen_shot.png)
+![title](srcs/screen_shot.png)
   
 2020 Program42 Competition
 
