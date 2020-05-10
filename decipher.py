@@ -26,8 +26,8 @@ Point = collections.namedtuple("Point", ["x", "y"])
 class EC(object):
     def __init__(self, a, b, q):
         assert 0 < a and a < q and 0 < b and b < q and q > 2
-        assert (4 * (a ** 3) + 27 * (b ** 2))  % q != 0 # no middle root. (mod q)
-        self.a = a
+        assert (4 * (a ** 3) + 27 * (b ** 2))  % q != 0 
+        self.a = a			# no middle root. (mod q)
         self.b = b
         self.q = q
         self.zero = Point(0, 0)
@@ -123,7 +123,7 @@ class STREAM():
             print('')
 	return pt
 	'''
-	dpt = []
+	lst = []
 	rt = known_pt.x
 	k = 0
 	lst.append(chr(rt/(2**8)**30))
