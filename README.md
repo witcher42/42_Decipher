@@ -6,7 +6,9 @@
   
 2020 Program42 Competition
 
-team: 사이버작전사령부
+team:     사이버작전사령부  
+
+video:    https://youtu.be/12G7eWwGvJM  
 
 email:    junelee@student.42seoul.kr
 
