@@ -110,8 +110,8 @@ class STREAM():
         return ct
 
     def decryption(self, known_pt):	# attackers_dec(known_pt)
-	r = self.ec.random(0)		# original__dec(ct, private_key)
-	G = self.ec.random(0)		# start point G. order of the G is q.
+	r = self.ec.random(0)		# original__dec(ct, private_key)	
+	G = self.ec.random(r.x)		# start point G. order of the G is q.
 	private_key = G.x		# assume (!) change G.x
 	public__key = self.ec.smul(G,private_key)
 	validation, y = ec.findY(G.x)
@@ -121,19 +121,17 @@ class STREAM():
 	    negM = self.ec.negation(self.ec.smul(c1,private_key))
 	    pt = self.ec.addition(c2,negM)
             print('')
-	return pt
-	'''
+	    print("output_pt:", pt) 
+            print('')
+	loop = (len(pt)+29)/30
 	lst = []
-	rt = known_pt.x
 	k = 0
-	lst.append(chr(rt/(2**8)**30))
-	for i in range(0,(len(known_pt)+29)/30):
-		while k < len(known_pt[30*i:30*(i+1)]):	
-			rt = rt+(2**8)**(30-k-1)
-			k+=1
-			lst.append(chr(rt/(2**8)**30))
+	for i in range(0,loop):
+	    for k in range(30*i,30*(i+1)+1):  
+		rt = known_pt.x/((2**8)**(30-k))
+		k+=1
+		lst.append(chr(rt & 0xff))
 	return ''.join(lst)
-	'''
 
     def CPA(self, rt, kpt, q):		# do (!) 30 bytes
     	print(len(rt), "characters")
@@ -174,7 +172,7 @@ if __name__ == "__main__":
     known_pt = Point(x, y)
     print("input__pt:", known_pt)
     pt = stream.decryption(known_pt)
-    print("output_pt:", pt)
+    print(" decipher:", pt)   
     print("________________________________________________________")
     print('	Chosen Plain-text Attack Start')
     print('')
