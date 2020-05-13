@@ -120,16 +120,13 @@ class STREAM():
 	    c2 = self.ec.addition(known_pt,self.ec.smul(public__key,r.x))
 	    negM = self.ec.negation(self.ec.smul(c1,private_key))
 	    pt = self.ec.addition(c2,negM)
-            print('')
 	    print("output_pt:", pt) 
-            print('')
 	loop = (len(pt)+29)/30
 	lst = []
 	k = 0
 	for i in range(0,loop):
 	    for k in range(30*i,30*(i+1)+1):  
 		rt = known_pt.x/((2**8)**(30-k))
-		k+=1
 		lst.append(chr(rt & 0xff))
 	return ''.join(lst)
 
@@ -172,6 +169,7 @@ if __name__ == "__main__":
     known_pt = Point(x, y)
     print("input__pt:", known_pt)
     pt = stream.decryption(known_pt)
+    print('')
     print(" decipher:", pt)   
     print("________________________________________________________")
     print('	Chosen Plain-text Attack Start')
