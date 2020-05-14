@@ -11,11 +11,11 @@ def mulInv(n, q):
 def extEuclid(a, b):
     s0, s1, t0, t1 = 1, 0, 0, 1
     while b > 0:
-        q, r = divmod(a, b)		# a // b, a % b
+        q, r = divmod(a, b)		# a//b, a%b
         a, b = b, r
         s0, s1, t0, t1 = s1, s0 - q * s1, t1, t0 - q * t1
         pass
-    return s0, t0, a 			# a: always 1
+    return s0, t0, a 			# a : always 1
 
 def sqrRoot(n, q):
     r = pow(n,(q+1)/4,q) 		# r is a quadratic residue
@@ -129,8 +129,7 @@ class STREAM():
 	return ''.join(lst)
 
     def CPA(self, rt, kpt, q):		# do (!) 30 bytes
-    	print(len(rt), "characters")
-    	print('')
+    	print(len(rt), "characters\n")
     	while self.seed < q:
 	    stream = STREAM(ec,self.seed,P,Q);
 	    pt = stream.encryption(bytearray(rt)) 
@@ -160,20 +159,16 @@ if __name__ == "__main__":
     pt = stream.encryption(bytearray(ct))
     print("   decoded pt:", pt)
     print("________________________________________________________")
-    print("	Decipher Example")
-    print('')
+    print("	Decipher Example\n")
     x = int('0x'+bytes(ct).encode('hex'), 16)
     validation, y = ec.findY(x)
     known_pt = Point(x, y)
     print("input__pt:", known_pt)
     pt = stream.decryption(known_pt)
-    print('')
-    print(" decipher:", pt)   
+    print("\n decipher:", pt)   
     print("________________________________________________________")
-    print('	Chosen Plain-text Attack Start')
-    print('')
+    print("	Chosen Plain-text Attack Start\n")
     ct = open('srcs/encrypted_text', 'r').read()
     rt = bytes(ct).encode('hex').decode('hex')
     stream = STREAM(ec,seed,P,Q);
-    pt = stream.CPA(rt,kpt,prime)
-    print(pt)
+    print(stream.CPA(rt,kpt,prime))
