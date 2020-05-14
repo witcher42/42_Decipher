@@ -71,7 +71,7 @@ class EC(object):
     def findY(self, x):
         y2 = (x ** 3 + self.a * x + self.b) % self.q
         y, my = sqrRoot(y2, self.q)
-        return y2 == y*y%self.q, y 	# validation y*y%self.q
+        return y2 == y*y%self.q, y 	# validate y*y%self.q
 
     def random(self, xin):
         while True:
@@ -119,15 +119,13 @@ class STREAM():
 	    c1 = self.ec.smul(G,r.x)
 	    c2 = self.ec.addition(known_pt,self.ec.smul(public__key,r.x))
 	    negM = self.ec.negation(self.ec.smul(c1,private_key))
-	    pt = self.ec.addition(c2,negM)
-	    print("output_pt:", pt) 
-	loop = (len(pt)+29)/30
+	    pt, compression = self.ec.addition(c2,negM)
+	    print("output_pt:", Point(pt,compression)) 
 	lst = []
-	k = 0
-	for i in range(0,loop):
+	for i in range(0,(len(known_pt)+29)/30):
 	    for k in range(30*i,30*(i+1)+1):  
-		rt = known_pt.x/((2**8)**(30-k))
-		lst.append(chr(rt & 0xff))
+		ct = pt/((2**8)**(30-k))
+		lst.append(chr(ct & 0xff))
 	return ''.join(lst)
 
     def CPA(self, rt, kpt, q):		# do (!) 30 bytes
