@@ -125,7 +125,7 @@ class STREAM():
 	for i in range(0,(len(known_pt)+29)/30):
 	    for k in range(30*i,30*(i+1)+1):  
 		ct = pt/((2**8)**(30-k))
-		lst.append(chr(ct & 0xff))
+		lst.append(chr(ct&0xff))
 	return ''.join(lst)
 
     def CPA(self, rt, kpt, q):		# do (!) 30 bytes
@@ -136,7 +136,7 @@ class STREAM():
 	    pt = stream.encryption(bytearray(rt)) 
 	    if (pt.find(kpt) != 0): 	# -1
 	    	return pt
-	    self.seed+=1
+	    self.seed-=1
 
 
 if __name__ == "__main__":
