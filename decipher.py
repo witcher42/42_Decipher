@@ -171,4 +171,5 @@ if __name__ == "__main__":
     ct = open('srcs/encrypted_text', 'r').read()
     rt = bytes(ct).encode('hex').decode('hex')
     stream = STREAM(ec,seed,P,Q);
+    kpt = stream.encryption(bytearray(kpt))
     print(stream.CPA(rt,kpt,prime))
