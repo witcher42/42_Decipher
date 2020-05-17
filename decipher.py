@@ -109,9 +109,27 @@ class STREAM():
 		ct = ct + chr(((r>>((30-j)*8))&0xff)^pt[30*i+j-1]) 
         return ct
 
-    def decryption(self, known_pt):	# attackers_dec(known_pt)
+    def decryption(self, ct):
+	lst = []
+	for i in range(0,(len(ct)+29)/30-1):
+            r = self.genStream()
+	    for k in range(0,30):  
+	        pt = ((r/(2**8)**(30-k-1))&0xff)^ct[k]
+	        lst.append(chr(pt))
+	return ''.join(lst)
+
+    def CPA(self, rt, kpt, q):		# do (!) 30 bytes
+    	print(len(rt), "characters\n")
+    	while self.seed < q:
+	    stream = STREAM(ec,self.seed,P,Q);
+	    pt = stream.decryption(bytearray(rt)) 
+	    if (pt.find(kpt) != 0): 	# -1
+	    	return pt
+	    self.seed+=1
+
+    def ECC(self, known_pt):		# attackers_dec(known_pt)
 	r = self.ec.random(0)		# original__dec(ct, private_key)	
-	G = self.ec.random(r.x)		# start point G : order of the G is q
+	G = self.ec.random(r.x)		# start point G : order of G is q
 	private_key = G.x		# assume (!) change G.x
 	public__key = self.ec.smul(G,private_key)
 	validation, y = ec.findY(G.x)
@@ -120,22 +138,13 @@ class STREAM():
 	    c2 = self.ec.addition(known_pt,self.ec.smul(public__key,r.x))
 	    negM = self.ec.negation(self.ec.smul(c1,private_key))
 	    pt, compression = self.ec.addition(c2,negM)
-	    print("output_pt:", Point(pt,compression)) 
+	    print("       output:", Point(pt,compression)) 
 	lst = []
 	for i in range(0,(len(known_pt)+29)/30):
 	    for k in range(30*i,30*(i+1)+1):  
 		ct = pt/((2**8)**(30-k))
 		lst.append(chr(ct&0xff))
 	return ''.join(lst)
-
-    def CPA(self, rt, kpt, q):		# do (!) 30 bytes
-    	print(len(rt), "characters\n")
-    	while self.seed < q:
-	    stream = STREAM(ec,self.seed,P,Q);
-	    pt = stream.encryption(bytearray(rt)) 
-	    if (pt.find(kpt) != 0): 	# -1
-	    	return pt
-	    self.seed+=1
 
 
 if __name__ == "__main__":
@@ -148,7 +157,7 @@ if __name__ == "__main__":
     Q = Point(54754931428196528902595765731417656438047316294230479980073352787194748472682,
                31061354882773147087028928252065932953521048346447896605357202055562579555845)
     print("________________________________________________________")
-    kpt = open('srcs/known_plain_text', 'r').read()
+    kpt = open('srcs/known_plain_text_LF', 'r').read()
     print("           pt:",kpt)
     seed = 0xffffffffffffffff
     stream = STREAM(ec,seed,P,Q); 
@@ -156,20 +165,23 @@ if __name__ == "__main__":
     print("  original ct:",ct)
     print(" encrypted ct:",bytes(ct).encode('hex'))
     stream = STREAM(ec,seed,P,Q); 
-    pt = stream.encryption(bytearray(ct))
-    print("   decoded pt:", pt)
+    pt = stream.decryption(bytearray(ct))
+    print("   decoded pt:", pt) 
     print("________________________________________________________")
     print("	Decipher Example\n")
     x = int('0x'+bytes(ct).encode('hex'), 16)
     validation, y = ec.findY(x)
     known_pt = Point(x, y)
-    print("input__pt:", known_pt)
-    pt = stream.decryption(known_pt)
-    print("\n decipher:", pt)   
+    print("	input:", known_pt)
+    ct = stream.ECC(known_pt)
+    print("\n  decipher ct:", ct)   
+    stream = STREAM(ec,seed,P,Q); 
+    pt = stream.decryption(bytearray(ct))
+    print("  decipher pt:", pt)  
     print("________________________________________________________")
-    print("	Chosen Plain-text Attack Start\n")
+    print('	Chosen Plain-text Attack Start\n')
     ct = open('srcs/encrypted_text', 'r').read()
     rt = bytes(ct).encode('hex').decode('hex')
     stream = STREAM(ec,seed,P,Q);
-    kpt = stream.encryption(bytearray(kpt))
+    kpt = stream.decryption(bytearray(kpt))
     print(stream.CPA(rt,kpt,prime))
